@@ -20,15 +20,14 @@ function Todos() {
         setNewTodo({ ...newTodo, [e.target.name]: e.target.value });
     };
     const handleAdd = async () => {
-        if (newTodo.nameTodo === "") {
-            window.alert("Vui lòng nhập todo");
+        if (!newTodo.nameTodo) {
+            alert("Vui lòng nhập todo");
             return
         }   
-            const res = await axios.post( "http://localhost:3000/api/todos",
-                    {
-                        ...newTodo,
-                        id: Math.floor(Math.random() * 999999)
-                    }
+        const res = await axios.post( "http://localhost:3000/api/todos",
+            {
+                ...newTodo
+            }
                 );
                 setNewTodo({ nameTodo: "" });
                 setAllTodo(res.data);
@@ -54,14 +53,14 @@ function Todos() {
         }
     };
 
-    const handleDeleteAll = async () => {
-        try {
-            const res = await axios.delete(`http://localhost:3000/api/todos`);    
-            setAllTodo(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const handleDeleteAll = async () => {
+    //     try {
+    //         const res = await axios.delete(`http://localhost:3000/api/todos`);    
+    //         setAllTodo(res.data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     const handleChangeStatus = async (item) => {
         const res = await axios.patch(`http://localhost:3000/api/todos/${item.id}`,item);     
@@ -105,18 +104,18 @@ function Todos() {
                     {allTodo?.map((item, index) => (
                         <div key={index} className="flex">
                             <p className="border-solid border-2 bg-white rounded-l-lg ml-9 w-3/6 h-10 pl-4 pt-2 mt-5"
-                            style={{textDecoration: item.completed ? 'line-through' : 'none'}}>
+                            style={{textDecoration: `${item.status == 'completed' ? 'line-through' : 'none'}`}}>
                                 {item.nameTodo}
                             </p>
                             <button
-                                onClick={() => handleChangeStatus(item)}
                                 className="border-2 pl-4 pr-4 mt-5"
                             >
-                                Com
+                                {item.status == 'completed' ? 'Yes' : 'No'}
                             </button>
                             <button
                                 onClick={() => handleEdit(item)}
                                 className="border-2 pl-4 pr-4 mt-5"
+                                style={{visibility: `${item.status == 'completed' ? 'hidden' : 'visible'}`}}
                             >
                                 Sửa
                             </button>
@@ -136,7 +135,6 @@ function Todos() {
                     </h2>
                     <button
                         className="block bg-red-500 w-[100px] h-[40px] rounded-lg"
-                        onClick={handleDeleteAll}
                     >
                         Delete all
                     </button>

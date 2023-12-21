@@ -46,22 +46,25 @@ function editTodos(id, nameTodo, status) {
     return new Promise((resolve, reject) => {
         var sql = `UPDATE list SET nameTodo = '${nameTodo}', WHERE id = ${id}`;
         connection.query(sql, function (err, results) {
-            if (err) throw err;
-            console.log("Sua thanh cong");
+            if (err){
+                return console.log(err);
+            }
+            
         });
-        if (status === "completed") {
-            var sql = `UPDATE list SET status = 'unfinished' WHERE id = ${id}`;
-            connection.query(sql, function (err, results) {
-                if (err) throw err;
-                console.log("Sua thanh cong");
-            });
-        } else {
+        if (status == "unfinished") {
             var sql = `UPDATE list SET status = 'completed' WHERE id = ${id}`;
             connection.query(sql, function (err, results) {
                 if (err) throw err;
                 console.log("Sua thanh cong");
             });
-        }
+        } 
+        // else {
+        //     var sql = `UPDATE list SET status = 'completed' WHERE id = ${id}`;
+        //     connection.query(sql, function (err, results) {
+        //         if (err) throw err;
+        //         console.log("Sua thanh cong");
+        //     });
+        // }
     })
 }
 
